@@ -1,0 +1,15 @@
+name: Wake Render Bot
+
+on:
+  schedule:
+    - cron: '50 9 * * *'   # 3:20 PM IST (TEST)
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render
+        run: |
+          echo "Waking up Render bot..."
+          curl -L --max-time 120 https://manager-v2-adot.onrender.com

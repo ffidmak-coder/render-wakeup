@@ -1,15 +1,37 @@
-name: Wake Render Bot
+name: Smart Wake Render Bot
 
 on:
   schedule:
-    - cron: "18 11 * * *"   # TEST time
+    - cron: "* * * * *"   # every minute run
   workflow_dispatch:
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Render
+      - name: Smart Wake Logic
         run: |
-          echo "Waking up Render bot..."
-          curl -I https://manager-v2-adot.onrender.com
+          echo "Checking IST time..."
+
+          IST_HOUR=$(TZ="Asia/Kolkata" date +%H)
+          IST_MIN=$(TZ="Asia/Kolkata" date +%M)
+
+          echo "IST time = $IST_HOUR:$IST_MIN"
+
+          # Run only between 17:30–17:36 IST
+          if [[ "$IST_HOUR" == "17" && "$IST_MIN" -ge "30" && "$IST_MIN" -le "36" ]]; then
+            echo "Inside wake window. Checking bot status..."
+
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://manager-v2-adot.onrender.com)
+
+            echo "HTTP status = $STATUS"
+
+            if [[ "$STATUS" != "200" ]]; then
+              echo "Bot sleeping → sending wake ping..."
+              curl -I https://manager-v2-adot.onrender.com
+            else
+              echo "Bot already running → no action needed."
+            fi
+          else
+            echo "Not wake time → skipping."
+          fi

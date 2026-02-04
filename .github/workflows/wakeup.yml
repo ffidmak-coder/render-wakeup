@@ -2,7 +2,7 @@ name: Wake Render Bot
 
 on:
   schedule:
-    - cron: "36 9 * * *"   # TEST time
+    - cron: "30 10 * * *"   # TEST time
   workflow_dispatch:
 
 jobs:

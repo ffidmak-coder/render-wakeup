@@ -2,7 +2,7 @@ name: Wake Render Bot
 
 on:
   schedule:
-    - cron: '50 9 * * *'   # 3:20 PM IST (TEST)
+    - cron: "36 9 * * *"   # TEST time
   workflow_dispatch:
 
 jobs:
@@ -12,4 +12,4 @@ jobs:
       - name: Ping Render
         run: |
           echo "Waking up Render bot..."
-          curl -L --max-time 120 https://manager-v2-adot.onrender.com
+          curl -I https://bot-server-v3.onrender.com
